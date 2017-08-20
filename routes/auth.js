@@ -28,6 +28,7 @@ function extractProfile(profile) {
 passport.use(new GoogleStrategy({
   clientID: process.env.CLIENT_ID,
   clientSecret: process.env.CLIENT_SECRET,
+  // FIXME: Enable to switch local & production environment.
   callbackURL: 'http://localhost:8080/auth/google/callback',
   accessType: 'offline',
 }, (accessToken, refreshToken, profile, cb) => {
@@ -50,6 +51,22 @@ const router = express.Router();
 
 router.get('/login',
   passport.authenticate('google', { scope: ['email', 'profile'] }),
+);
+
+router.get(
+  // OAuth 2 callback url. Use this url to configure your OAuth client in the
+  // Google Developers console
+  '/google/callback',
+
+  // Finish OAuth 2 flow using Passport.js
+  passport.authenticate('google'),
+
+  // Redirect back to the original page, if any
+  (req, res) => {
+    const redirect = req.session.oauth2return || '/';
+    delete req.session.oauth2return;
+    res.redirect(redirect);
+  },
 );
 
 export default router;
