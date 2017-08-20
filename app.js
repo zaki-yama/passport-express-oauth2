@@ -1,5 +1,8 @@
 import express from 'express';
 import path from 'path';
+import passport from 'passport';
+
+import auth from './routes/auth';
 
 const app = express();
 const port = process.env.PORT || 8080;
@@ -18,6 +21,11 @@ if (process.env.NODE_ENV !== 'production') {
     publicPath: config.output.publicPath,
   }));
 }
+
+
+// OAuth2
+app.use(passport.initialize());
+app.use('/auth', auth);
 
 // Serve static files
 app.use(express.static(path.join(__dirname, 'public')));
