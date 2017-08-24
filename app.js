@@ -1,4 +1,5 @@
 import express from 'express';
+import session from 'express-session';
 import path from 'path';
 import passport from 'passport';
 
@@ -7,6 +8,7 @@ import auth from './routes/auth';
 const app = express();
 const port = process.env.PORT || 8080;
 
+/* [START express setting] */
 if (process.env.NODE_ENV !== 'production') {
   /* eslint-disable global-require, import/no-extraneous-dependencies */
   const webpack = require('webpack');
@@ -22,15 +24,34 @@ if (process.env.NODE_ENV !== 'production') {
   }));
 }
 
+app.use(session({
+  secret: 'keyboard cat',
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    maxAge: 1000 * 60 * 60 * 24 * 30,
+  },
+}));
+/* [END express setting] */
 
-// OAuth2
+
+/* [START passport setting] */
 app.use(passport.initialize());
+app.use(passport.session());
+/* [END passport setting] */
+
+// Routing
 app.use('/auth', auth);
 
 // Serve static files
-app.use(express.static(path.join(__dirname, 'public')));
+// app.use(express.static(path.join(__dirname, 'public')));
 
-console.log(`Served: http://localhost:${port}`);
+// Application Root
+app.get('/', (req, res) => {
+  console.log('user', req.user);
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
 app.listen(port, (err) => {
   if (err) {
     console.error(err);

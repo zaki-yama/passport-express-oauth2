@@ -24,6 +24,7 @@
     "babel-preset-react": "^6.16.0",
     "css-loader": "^0.28.4",
     "express": "^4.15.3",
+    "express-session": "^1.15.5",
     "node-sass": "^4.5.3",
     "passport": "^0.4.0",
     "passport-google-oauth20": "^1.0.0",
