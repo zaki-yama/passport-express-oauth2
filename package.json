@@ -6,7 +6,7 @@
   "scripts": {
     "build": "NODE_ENV=production webpack --config=webpack.config.prod.babel.js --progress --colors",
     "heroku-postbuild": "npm run build",
-    "start": "babel-node app.js",
+    "start": "babel-watch app.js",
     "lint": "eslint src",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -42,6 +42,7 @@
     "webpack-merge": "^4.1.0"
   },
   "devDependencies": {
+    "babel-watch": "^2.0.7",
     "eslint": "^3.9.1",
     "eslint-config-airbnb": "^13.0.0",
     "eslint-plugin-import": "^2.2.0",
