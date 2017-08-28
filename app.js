@@ -1,5 +1,7 @@
 import express from 'express';
 import session from 'express-session';
+import mongoose from 'mongoose';
+import connectMongo from 'connect-mongo';
 import path from 'path';
 import passport from 'passport';
 
@@ -24,10 +26,22 @@ if (process.env.NODE_ENV !== 'production') {
   }));
 }
 
+
+const DATABASE_URI =
+  process.env.MONGOLAB_URI ||
+  process.env.MONGOHQ_URL ||
+  'mongodb://localhost/myapp';
+
+mongoose.connect(DATABASE_URI, {
+  useMongoClient: true,
+});
+
+const MongoStore = connectMongo(session);
 app.use(session({
   secret: 'keyboard cat',
   resave: false,
   saveUninitialized: true,
+  store: new MongoStore({ mongooseConnection: mongoose.connection }),
   cookie: {
     maxAge: 1000 * 60 * 60 * 24 * 30,
   },
