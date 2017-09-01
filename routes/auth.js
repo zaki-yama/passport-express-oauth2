@@ -47,11 +47,18 @@ passport.use(new GoogleStrategy({
 
 passport.serializeUser((user, done) => {
   console.log('serializeUser', user);
-  done(null, user);
+  done(null, user.id);
 });
-passport.deserializeUser((obj, done) => {
-  console.log('deserializeUser', obj);
-  done(null, obj);
+passport.deserializeUser((id, done) => {
+  console.log('deserializeUser', id);
+  User.findById(id, (err, user) => {
+    if (err || !user) {
+      console.log('Cannot find user', id);
+      return done(err);
+    }
+    console.log('Found user', user);
+    done(null, user);
+  });
 });
 // [END setup]
 
