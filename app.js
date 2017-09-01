@@ -62,7 +62,10 @@ app.use('/auth', auth);
 
 // Application Root
 app.get('/', (req, res) => {
-  console.log('user', req.user);
+  console.log('/', req.user);
+  if (!req.user) {
+    return res.redirect('/auth/login');
+  }
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
