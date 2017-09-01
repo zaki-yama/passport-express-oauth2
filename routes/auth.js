@@ -4,6 +4,8 @@ import express from 'express';
 import passport from 'passport';
 import passportGoogleOauth2 from 'passport-google-oauth20';
 
+import User from '../models/user';
+
 const GoogleStrategy = passportGoogleOauth2.Strategy;
 
 function extractProfile(profile) {
@@ -31,10 +33,16 @@ passport.use(new GoogleStrategy({
   // FIXME: Enable to switch local & production environment.
   callbackURL: 'http://localhost:8080/auth/google/callback',
   accessType: 'offline',
-}, (accessToken, refreshToken, profile, cb) => {
+}, (accessToken, refreshToken, profile, done) => {
   // Extract the minimal profile information we need from the profile object
   // provided by Google
-  cb(null, extractProfile(profile));
+  User.findByIdAndUpdate(profile.id, extractProfile(profile), {
+    upsert: true,
+    new: true,
+  }, (err, user) => {
+    console.log(err, user);
+    return done(err, user);
+  });
 }));
 
 passport.serializeUser((user, done) => {
