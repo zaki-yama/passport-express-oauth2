@@ -6,7 +6,7 @@
   "scripts": {
     "build": "NODE_ENV=production webpack --config=webpack.config.prod.babel.js --progress --colors",
     "heroku-postbuild": "npm run build",
-    "start": "babel-node app.js",
+    "start": "babel-watch app.js",
     "lint": "eslint src",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -22,9 +22,14 @@
     "babel-plugin-transform-object-rest-spread": "^6.23.0",
     "babel-preset-es2015": "^6.18.0",
     "babel-preset-react": "^6.16.0",
+    "connect-mongo": "^1.3.2",
     "css-loader": "^0.28.4",
     "express": "^4.15.3",
+    "express-session": "^1.15.5",
+    "mongoose": "^4.11.8",
     "node-sass": "^4.5.3",
+    "passport": "^0.4.0",
+    "passport-google-oauth20": "^1.0.0",
     "react": "^15.3.2",
     "react-dom": "^15.3.2",
     "react-hot-loader": "next",
@@ -40,6 +45,7 @@
     "webpack-merge": "^4.1.0"
   },
   "devDependencies": {
+    "babel-watch": "^2.0.7",
     "eslint": "^3.9.1",
     "eslint-config-airbnb": "^13.0.0",
     "eslint-plugin-import": "^2.2.0",
