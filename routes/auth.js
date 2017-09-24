@@ -36,7 +36,13 @@ passport.use(new GoogleStrategy({
 }, (accessToken, refreshToken, profile, done) => {
   // Extract the minimal profile information we need from the profile object
   // provided by Google
-  User.findByIdAndUpdate(profile.id, extractProfile(profile), {
+  const user = {
+    accessToken,
+    refreshToken,
+    ...extractProfile(profile),
+  };
+
+  User.findByIdAndUpdate(profile.id, user, {
     upsert: true,
     new: true,
   }, (err, user) => {
