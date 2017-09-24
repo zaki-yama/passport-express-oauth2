@@ -31,6 +31,7 @@
     "node-sass": "^4.5.3",
     "passport": "^0.4.0",
     "passport-google-oauth20": "^1.0.0",
+    "passport-oauth2-refresh": "^1.0.0",
     "react": "^15.3.2",
     "react-dom": "^15.3.2",
     "react-hot-loader": "next",
