@@ -65,7 +65,11 @@ passport.deserializeUser((id, done) => {
 const router = express.Router();
 
 router.get('/login',
-  passport.authenticate('google', { scope: ['email', 'profile'] }),
+  passport.authenticate('google', { scope: [
+    'email',
+    'profile',
+    'https://www.googleapis.com/auth/tasks',
+  ] }),
 );
 
 router.get(
