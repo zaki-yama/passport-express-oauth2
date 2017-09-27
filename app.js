@@ -6,6 +6,7 @@ import path from 'path';
 import passport from 'passport';
 
 import auth from './routes/auth';
+import api from './routes/api';
 
 const app = express();
 const port = process.env.PORT || 8080;
@@ -56,6 +57,7 @@ app.use(passport.session());
 
 // Routing
 app.use('/auth', auth);
+app.use('/api', api);
 
 // Serve static files
 // app.use(express.static(path.join(__dirname, 'public')));

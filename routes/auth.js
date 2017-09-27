@@ -3,6 +3,7 @@ import express from 'express';
 // [START setup]
 import passport from 'passport';
 import passportGoogleOauth2 from 'passport-google-oauth20';
+import refresh from 'passport-oauth2-refresh';
 
 import User from '../models/user';
 
@@ -27,7 +28,7 @@ function extractProfile(profile) {
 // along with the user's profile. The function must invoke `cb` with a user
 // object, which will be set at `req.user` in route handlers after
 // authentication.
-passport.use(new GoogleStrategy({
+const strategy = new GoogleStrategy({
   clientID: process.env.CLIENT_ID,
   clientSecret: process.env.CLIENT_SECRET,
   // FIXME: Enable to switch local & production environment.
@@ -36,14 +37,22 @@ passport.use(new GoogleStrategy({
 }, (accessToken, refreshToken, profile, done) => {
   // Extract the minimal profile information we need from the profile object
   // provided by Google
-  User.findByIdAndUpdate(profile.id, extractProfile(profile), {
+  const user = {
+    accessToken,
+    refreshToken,
+    ...extractProfile(profile),
+  };
+
+  User.findByIdAndUpdate(profile.id, user, {
     upsert: true,
     new: true,
   }, (err, user) => {
     console.log(err, user);
     return done(err, user);
   });
-}));
+});
+passport.use(strategy);
+refresh.use(strategy);
 
 passport.serializeUser((user, done) => {
   console.log('serializeUser', user);
@@ -65,7 +74,11 @@ passport.deserializeUser((id, done) => {
 const router = express.Router();
 
 router.get('/login',
-  passport.authenticate('google', { scope: ['email', 'profile'] }),
+  passport.authenticate('google', { scope: [
+    'email',
+    'profile',
+    'https://www.googleapis.com/auth/tasks',
+  ] }),
 );
 
 router.get(
